@@ -6,9 +6,10 @@ Exposes an HTTP endpoint ``/predict`` that accepts a JSON payload with a
 score.
 
 Architecture notes:
-  • The trained model (``model.pkl``) and TF-IDF vectorizer
-    (``vectorizer.pkl``) are downloaded from GCS **once** during cold start
-    and cached in module-level globals for subsequent warm invocations.
+  • The trained model (``logistic_regression.pkl``) and TF-IDF vectorizer
+    (``tfidf_vectorizer.pkl``) are loaded from the local ``functions/``
+    directory on cold start and cached in module-level globals for
+    subsequent warm invocations.
   • Text cleaning mirrors the training pipeline exactly so that inference
     features match training features.
 """
@@ -17,20 +18,16 @@ import json
 import logging
 import os
 import re
-import tempfile
 
 import joblib
 import numpy as np
 from dotenv import load_dotenv
 from firebase_functions import https_fn
-from google.cloud import storage as gcs
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
 load_dotenv()
-
-GCS_BUCKET = os.getenv("GCS_BUCKET", "YOUR_PROJECT_ID-ml-data")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -41,9 +38,13 @@ logging.basicConfig(level=logging.INFO)
 _model = None
 _vectorizer = None
 
+# Path to .pkl files — same directory as this script
+_FUNCTIONS_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def _load_model():
-    """Download model artefacts from GCS and cache them globally.
+    """Load model artefacts from the local functions/ directory and cache
+    them globally.
 
     This function is idempotent — subsequent calls are no-ops once the
     model has been loaded.
@@ -51,39 +52,41 @@ def _load_model():
     global _model, _vectorizer
 
     if _model is not None and _vectorizer is not None:
-        logger.info("Model already cached — skipping download")
+        logger.info("Model already cached — skipping load")
         return
 
-    logger.info("Cold start: downloading model artefacts from gs://%s …", GCS_BUCKET)
-    client = gcs.Client()
-    bucket = client.bucket(GCS_BUCKET)
+    logger.info("Cold start: loading model artefacts from %s …", _FUNCTIONS_DIR)
 
-    tmp_dir = tempfile.gettempdir()
+    model_path = os.path.join(_FUNCTIONS_DIR, "logistic_regression.pkl")
+    vec_path = os.path.join(_FUNCTIONS_DIR, "tfidf_vectorizer.pkl")
 
-    # Download model.pkl
-    model_blob = bucket.blob("model.pkl")
-    model_path = os.path.join(tmp_dir, "model.pkl")
-    model_blob.download_to_filename(model_path)
+    if not os.path.isfile(model_path):
+        raise FileNotFoundError(
+            f"Model file not found: {model_path}. "
+            "Run ml/train.py first and copy the .pkl files into functions/."
+        )
+    if not os.path.isfile(vec_path):
+        raise FileNotFoundError(
+            f"Vectorizer file not found: {vec_path}. "
+            "Run ml/train.py first and copy the .pkl files into functions/."
+        )
+
     _model = joblib.load(model_path)
-    logger.info("model.pkl loaded successfully")
+    logger.info("logistic_regression.pkl loaded successfully")
 
-    # Download vectorizer.pkl
-    vec_blob = bucket.blob("vectorizer.pkl")
-    vec_path = os.path.join(tmp_dir, "vectorizer.pkl")
-    vec_blob.download_to_filename(vec_path)
     _vectorizer = joblib.load(vec_path)
-    logger.info("vectorizer.pkl loaded successfully")
+    logger.info("tfidf_vectorizer.pkl loaded successfully")
 
 
 # ---------------------------------------------------------------------------
 # Text Cleaning  (must mirror ml/train.py exactly)
 # ---------------------------------------------------------------------------
 
-def _clean_text(text: str) -> str:
+def clean_text(text: str) -> str:
     """Normalise input text using the same pipeline as training.
 
     Steps:
-      1. Remove Reuters byline tags
+      1. Remove Reuters byline tags, e.g. ``(Reuters)``
       2. Strip URLs
       3. Remove non-alphabetic characters
       4. Lowercase
@@ -134,11 +137,8 @@ def predict(req: https_fn.Request) -> https_fn.Response:
     **Response** (JSON):
         ``{
             "verdict": "FAKE" | "REAL",
-            "confidence": 0–100,
-            "analysis": {
-                "word_count": int,
-                "text_preview": str
-            }
+            "confidence": float (0-1),
+            "articlePreview": str (first 200 chars of input)
         }``
     """
 
@@ -191,7 +191,8 @@ def predict(req: https_fn.Request) -> https_fn.Response:
 
     # --- Inference ------------------------------------------------------------
     try:
-        cleaned = _clean_text(text)
+        # 1. Clean the input text using the same pipeline as training
+        cleaned = clean_text(text)
 
         if not cleaned.strip():
             return _json_response(
@@ -199,25 +200,24 @@ def predict(req: https_fn.Request) -> https_fn.Response:
                 status=422,
             )
 
+        # 2. Vectorize with TF-IDF
         text_tfidf = _vectorizer.transform([cleaned])
 
+        # 3. Get prediction + probability from LogReg model
         prediction = _model.predict(text_tfidf)[0]
         probabilities = _model.predict_proba(text_tfidf)[0]
 
-        # Confidence = probability of the predicted class, scaled to 0-100
+        # Confidence = probability of the predicted class (0-1 float)
         pred_index = list(_model.classes_).index(prediction)
-        confidence = round(float(probabilities[pred_index]) * 100, 2)
+        confidence = round(float(probabilities[pred_index]), 4)
 
-        word_count = len(cleaned.split())
-        text_preview = cleaned[:200] + ("…" if len(cleaned) > 200 else "")
+        # 4. Build article preview (first 200 chars of raw input)
+        article_preview = text[:200] + ("…" if len(text) > 200 else "")
 
         return _json_response({
             "verdict": prediction,
             "confidence": confidence,
-            "analysis": {
-                "word_count": word_count,
-                "text_preview": text_preview,
-            },
+            "articlePreview": article_preview,
         })
 
     except Exception as exc:
