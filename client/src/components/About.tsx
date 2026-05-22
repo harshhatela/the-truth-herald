@@ -10,7 +10,7 @@ export default function About() {
         padding: '0.6rem 0',
         textAlign: 'center',
       }}>
-        <span style={{
+        <span className="section-divider-label" style={{
           fontFamily: "'Special Elite', monospace",
           fontSize: '9px',
           letterSpacing: '3px',
@@ -22,11 +22,7 @@ export default function About() {
       </div>
 
       {/* 2-column layout */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1px 1fr',
-        width: '100%',
-      }}>
+      <div className="about-grid">
 
         {/* LEFT — story column */}
         <div style={{ padding: '2rem 2.5rem' }}>
@@ -110,7 +106,7 @@ export default function About() {
         </div>
 
         {/* VERTICAL DIVIDER */}
-        <div style={{ backgroundColor: '#2c2416' }} />
+        <div className="col-divider" style={{ backgroundColor: '#2c2416' }} />
 
         {/* RIGHT — tech specs column */}
         <div style={{ padding: '2rem 2.5rem' }}>

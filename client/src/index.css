@@ -341,3 +341,164 @@ textarea::placeholder, input::placeholder {
 ::-webkit-scrollbar-track { background: #ede8d8; }
 ::-webkit-scrollbar-thumb { background: #6b5c40; }
 ::-webkit-scrollbar-thumb:hover { background: #2c2416; }
+
+/* === MOBILE RESPONSIVE === */
+@media (max-width: 768px) {
+  /* Dropcap smaller on mobile */
+  .dropcap::first-letter {
+    font-size: 3.5rem;
+  }
+
+  /* Paper sheet — disable 3D tilt on mobile (causes overflow) */
+  .paper-sheet-3d {
+    transform: none !important;
+    box-shadow: 2px 4px 12px rgba(26, 18, 8, 0.15);
+  }
+  .paper-sheet-3d:hover {
+    transform: none !important;
+  }
+
+  /* Stamp smaller on mobile */
+  .stamp {
+    width: 80px;
+    height: 80px;
+    font-size: 0.85rem;
+  }
+
+  /* Prevent any horizontal scroll */
+  body { overflow-x: hidden; }
+
+  /* All top-level sections get safe horizontal padding */
+  section { padding-left: 0; padding-right: 0; }
+}
+
+@media (max-width: 480px) {
+  .edition-strip { display: none; }
+}
+
+@media (max-width: 600px) {
+  .nav-button { padding: 8px 12px !important; font-size: 9px !important; }
+}
+
+/* Hero Section Responsiveness */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  /* Hide the vertical divider on mobile */
+  .hero-grid .col-divider { display: none; }
+
+  /* Reduce hero padding on mobile */
+  .hero-grid > div {
+    padding: 2rem 1.25rem !important;
+  }
+
+  /* Smaller headline on mobile */
+  .hero-grid h2 {
+    font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
+  }
+
+  /* Stats grid full width on mobile */
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* App Layout Grid Responsiveness */
+.analyzer-grid {
+  display: grid;
+  grid-template-columns: 28% 44% 28%;
+  border-bottom: 1px solid #2c2416;
+}
+.analyzer-grid > div {
+  border-right: 1px solid #2c2416;
+}
+.analyzer-grid > div:last-child {
+  border-right: none;
+}
+@media (max-width: 768px) {
+  .analyzer-grid {
+    grid-template-columns: 1fr;
+  }
+  /* On mobile, each column gets a bottom border instead of right border */
+  .analyzer-grid > div {
+    border-right: none !important;
+    border-bottom: 1px solid #2c2416;
+  }
+  .analyzer-grid > div:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ResultCard Stamp Repositioning */
+@media (max-width: 768px) {
+  .stamp-wrapper {
+    position: static !important;
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+    transform: rotate(-12deg);
+  }
+  .stamp-wrapper > div {
+    position: static !important;
+  }
+
+  .verdict-headline {
+    font-size: clamp(2rem, 10vw, 3.5rem) !important;
+  }
+}
+
+/* About Grid Responsiveness */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-grid .col-divider { display: none; }
+  .about-grid > div {
+    padding: 1.5rem 1.25rem !important;
+  }
+  /* Specs table text slightly larger for readability */
+  .about-grid span {
+    font-size: 10px !important;
+  }
+}
+
+/* AnalyzerForm Responsiveness */
+@media (max-width: 768px) {
+  /* Reduce outer padding */
+  .analyzer-form-wrap { padding: 1rem !important; }
+
+  /* Shorter textarea on mobile — less scrolling */
+  .analyzer-form-wrap textarea { height: 160px !important; }
+
+  /* Stack word count and paste button */
+  .analyzer-form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+}
+
+/* History Panel Responsiveness */
+@media (max-width: 768px) {
+  .history-panel-wrap { padding: 1rem !important; }
+}
+
+/* Section divider label — prevent overflow on mobile */
+@media (max-width: 600px) {
+  .section-divider-label {
+    font-size: 8px !important;
+    letter-spacing: 1px !important;
+    padding: 0 0.5rem !important;
+  }
+}

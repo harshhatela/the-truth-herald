@@ -32,7 +32,7 @@ export default function HistoryPanel({ refreshKey }: Props) {
   }, [refreshKey]);
 
   return (
-    <div style={{ padding: '1.5rem 1.25rem' }}>
+    <div className="history-panel-wrap" style={{ padding: '1.5rem 1.25rem' }}>
 
       {/* Section header */}
       <p style={{

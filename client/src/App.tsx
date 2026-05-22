@@ -98,7 +98,7 @@ function App() {
         )}
 
         {/* 3-column newspaper grid — wrapping sections with scroll reveal */}
-        <div className="newspaper-grid grid grid-cols-1 md:grid-cols-[28%_44%_28%] divide-x divide-rule px-0">
+        <div className="analyzer-grid">
           
           {/* Left column — Article Submission (Analyzer) */}
           <section id="analyzer" className="reveal-section border-rule" style={{ minWidth: 0 }}>

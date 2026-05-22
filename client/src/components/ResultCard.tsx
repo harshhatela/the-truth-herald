@@ -99,35 +99,37 @@ export default function ResultCard({ result }: Props) {
     <article style={{ padding: '1.5rem', position: 'relative' }}>
 
       {/* Rubber stamp — absolutely positioned, top right */}
-      <div style={{
-        position: 'absolute',
-        top: '1.5rem',
-        right: '1.5rem',
-        width: '110px',
-        height: '110px',
-        border: `4px solid ${stampColor}`,
-        color: stampColor,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transform: 'rotate(-12deg)',
-        opacity: 0.88,
-        fontFamily: "'Special Elite', monospace",
-        zIndex: 2,
-      }}>
-        {/* Inner border */}
+      <div className="stamp-wrapper">
         <div style={{
           position: 'absolute',
-          inset: '4px',
-          border: `1.5px solid ${stampColor}`,
-        }} />
-        <span style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '3px' }}>
-          {isFake ? 'FAKE' : 'REAL'}
-        </span>
-        <span style={{ fontSize: '0.55rem', letterSpacing: '1.5px', marginTop: '2px' }}>
-          {isFake ? 'NEWS' : 'VERIFIED'}
-        </span>
+          top: '1.5rem',
+          right: '1.5rem',
+          width: '110px',
+          height: '110px',
+          border: `4px solid ${stampColor}`,
+          color: stampColor,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transform: 'rotate(-12deg)',
+          opacity: 0.88,
+          fontFamily: "'Special Elite', monospace",
+          zIndex: 2,
+        }}>
+          {/* Inner border */}
+          <div style={{
+            position: 'absolute',
+            inset: '4px',
+            border: `1.5px solid ${stampColor}`,
+          }} />
+          <span style={{ fontSize: '1.4rem', fontWeight: 700, letterSpacing: '3px' }}>
+            {isFake ? 'FAKE' : 'REAL'}
+          </span>
+          <span style={{ fontSize: '0.55rem', letterSpacing: '1.5px', marginTop: '2px' }}>
+            {isFake ? 'NEWS' : 'VERIFIED'}
+          </span>
+        </div>
       </div>
 
       {/* OUR VERDICT header */}
@@ -143,7 +145,7 @@ export default function ResultCard({ result }: Props) {
       </p>
 
       {/* Giant verdict word */}
-      <h2 style={{
+      <h2 className="verdict-headline" style={{
         fontFamily: "'Playfair Display', Georgia, serif",
         fontSize: 'clamp(3rem, 6vw, 5rem)',
         fontWeight: 900,

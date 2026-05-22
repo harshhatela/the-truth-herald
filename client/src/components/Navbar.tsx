@@ -26,17 +26,20 @@ export default function Navbar() {
     <header style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: '#f5f0e8' }}>
 
       {/* Edition strip — black bar at very top */}
-      <div style={{
-        backgroundColor: '#1a1208',
-        color: '#f5f0e8',
-        fontFamily: "'Special Elite', monospace",
-        fontSize: '10px',
-        letterSpacing: '2px',
-        padding: '5px 20px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
+      <div 
+        className="edition-strip"
+        style={{
+          backgroundColor: '#1a1208',
+          color: '#f5f0e8',
+          fontFamily: "'Special Elite', monospace",
+          fontSize: '10px',
+          letterSpacing: '2px',
+          padding: '5px 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         <span>EST. 2025 · VOL. I · EDITION 1 · PRICE: FREE</span>
         {isMock && (
           <span style={{ color: '#c0392b', letterSpacing: '3px' }}>◆ DEMO EDITION ◆</span>
@@ -47,7 +50,7 @@ export default function Navbar() {
       <div style={{ textAlign: 'center', padding: '16px 20px 0' }}>
         <h1 style={{
           fontFamily: "'Playfair Display', Georgia, serif",
-          fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+          fontSize: 'clamp(2rem, 8vw, 4.5rem)',
           fontWeight: 900,
           letterSpacing: '-1px',
           lineHeight: 1,
@@ -97,6 +100,7 @@ export default function Navbar() {
           <button
             key={id}
             onClick={() => scrollTo(id)}
+            className="nav-button"
             style={{
               fontFamily: "'Special Elite', monospace",
               fontSize: '10px',

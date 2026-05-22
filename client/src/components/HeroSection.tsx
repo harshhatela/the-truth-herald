@@ -24,11 +24,7 @@ export default function HeroSection() {
     }}>
 
       {/* Full-width 2-column grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1px 1fr',
-        width: '100%',
-      }}>
+      <div className="hero-grid">
 
         {/* LEFT COLUMN */}
         <div style={{ padding: '3rem 3rem 3rem 2.5rem' }}>
@@ -100,7 +96,7 @@ export default function HeroSection() {
         </div>
 
         {/* VERTICAL DIVIDER */}
-        <div style={{ backgroundColor: '#2c2416', alignSelf: 'stretch' }} />
+        <div className="col-divider" style={{ backgroundColor: '#2c2416', alignSelf: 'stretch' }} />
 
         {/* RIGHT COLUMN */}
         <div style={{ padding: '3rem 2.5rem 3rem 3rem' }}>
@@ -160,7 +156,7 @@ export default function HeroSection() {
           </p>
 
           {/* Stats grid */}
-          <div style={{
+          <div className="stats-grid" style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gap: '1rem',

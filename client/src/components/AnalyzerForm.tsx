@@ -21,7 +21,7 @@ export default function AnalyzerForm({ onSubmit, isLoading }: Props) {
   };
 
   return (
-    <div style={{ padding: '1.5rem 1.25rem' }}>
+    <div className="analyzer-form-wrap" style={{ padding: '1.5rem 1.25rem' }}>
 
       {/* Section header */}
       <p style={{
@@ -74,7 +74,7 @@ export default function AnalyzerForm({ onSubmit, isLoading }: Props) {
       </div>
 
       {/* Word count + paste row */}
-      <div style={{
+      <div className="analyzer-form-actions" style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
