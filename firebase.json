@@ -1,24 +1,20 @@
 {
   "hosting": {
-    "source": "client",
-    "public": "dist",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "public": "client/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
-      {
-        "source": "/api/**",
-        "function": "predict"
-      },
       {
         "source": "**",
         "destination": "/index.html"
       }
     ]
   },
-  "functions": [
-    {
-      "source": "functions",
-      "codebase": "default",
-      "runtime": "python312"
-    }
-  ]
+  "functions": {
+    "source": "functions",
+    "runtime": "python311"
+  }
 }
