@@ -97,17 +97,17 @@ classifier trained on 114MB of verified and fabricated news articles.
           └──────────┬─────────────────────────────┘
                      │                    │
           ┌──────────▼──────┐   ┌─────────▼──────────┐
-          │  CLOUD STORAGE  │   │     FIRESTORE       │
-          │  tfidf.pkl      │   │  Analysis history   │
-          │  model.pkl      │   │  per user session   │
+          │  CLOUD STORAGE  │   │     FIRESTORE      │
+          │  tfidf.pkl      │   │  Analysis history  │
+          │  model.pkl      │   │  per user session  │
           └─────────────────┘   └────────────────────┘
                      │
           ┌──────────▼──────────────────────────────┐
           │        ML TRAINING (Vertex AI)          │
           │  • Fake.csv + True.csv (114MB)          │
-          │  • TF-IDF (50K features, 1-2 ngrams)   │
+          │  • TF-IDF (50K features, 1-2 ngrams)    │
           │  • LogisticRegression (balanced)        │
-          │  • 94% accuracy on held-out test set   │
+          │  • 94% accuracy on held-out test set    │
           └─────────────────────────────────────────┘
 ```
 
